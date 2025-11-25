@@ -34,6 +34,7 @@ def index():
 
 @app.route('/posts', methods=['GET','POST'])
 def posts():
+    posts = Posts.query.all()
     if request.method == 'POST':
         newPost = Posts(
             poster=request.form['name'],
@@ -41,5 +42,11 @@ def posts():
         )
         db.session.add(newPost)
         db.session.commit()
-        return redirect(url_for('index'))
-    return render_template('posts.html')
+        return redirect(url_for('posts'))
+    return render_template('posts.html',posts=posts)
+
+with app.app_context():
+    db.create_all()
+
+if __name__ == '__main__':
+    app.run(debug=True)

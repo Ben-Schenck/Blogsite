@@ -7,4 +7,7 @@
     <button type="submit">Post</button>
 </form>
 <h1>Recent Activity</h1>
+{%for post in posts%}
+<p>{{posts.poster}} {{posts.postTxt}}</p>
+{%endfor%}
 {% endblock %}  
