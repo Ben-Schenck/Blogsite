@@ -45,6 +45,8 @@ def posts():
         return redirect(url_for('posts'))
     return render_template('posts.html',posts=posts)
 
+
+    
 with app.app_context():
     db.create_all()
 
