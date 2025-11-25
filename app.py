@@ -45,7 +45,9 @@ def posts():
         return redirect(url_for('posts'))
     return render_template('posts.html',posts=posts)
 
-
+@app.route('/posts/comment',methods=['GET','POST'])
+def comment():
+    pass
     
 with app.app_context():
     db.create_all()

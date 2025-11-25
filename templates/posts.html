@@ -6,8 +6,36 @@
     <label>Post:</label><input type="text" name="postText"><br>
     <button type="submit">Post</button>
 </form>
+
 <h1>Recent Activity</h1>
 {%for i in posts%}
 <p>{{i.poster}} says: {{i.postTxt}}</p>
+<form method="POST" id="makeComment">
+    <button type="button" class="collapsible">Make a Comment</button>
+    <div class="content">
+        <label>Your Name:</label><input type="text" name="commentName"><br>
+        <label>Comment:</label><input type="text" name="commentText"><br>
+        <button type="submit">Post</button>
+    </div>
+    <script>
+var coll = document.getElementsByClassName("collapsible");
+var i;
+
+for (i = 0; i < coll.length; i++) {
+  coll[i].addEventListener("click", function() {
+    this.classList.toggle("active");
+    var content = this.nextElementSibling;
+    if (content.style.display === "block") {
+      content.style.display = "none";
+    } else {
+      content.style.display = "block";
+    }
+  });
+}
+</script>
+</form>
+
+<h4>Comments:</h4><hr>
+
 {%endfor%}
 {% endblock %}  
