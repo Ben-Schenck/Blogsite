@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Make a Post</h1>
+<form method="POST" id="makePost">
+    <label>Your Name:</label><input type="text" name="name"><br>
+    <label>Post:</label><input type="text" name="postText"><br>
+    <button type="submit">Post</button>
+</form>
+<h1>Recent Activity</h1>
+{% endblock %}  
