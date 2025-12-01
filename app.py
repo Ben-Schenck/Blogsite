@@ -15,15 +15,22 @@ db = SQLAlchemy(app)
 
 #DATABASES
 
-class Posts(db. Model):
+class Users(db.Model):
+    userID = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80), nullable=False)
+    posts = db.relationship('Posts', backref='user', lazy=True)
+    comments = db.relationship('Comments', backref='user', lazy=True)
+
+class Posts(db.Model):
     postID = db.Column(db.Integer, primary_key=True)
-    poster = db.Column(db.String(80), nullable=False)
+    userID = db.Column(db.Integer,db.ForeignKey(Users.userID), nullable=False)
     postTxt = db.Column(db.String(80), nullable=False)
-    #comments = db.relationship('Comments', backref='posts', lazy=True)
+    comments = db.relationship('Comments', backref='post', lazy=True)
 
 class Comments(db.Model):
     commentID = db.Column(db.Integer, primary_key=True)
-    poster = db.Column(db.String, nullable=False)
+    userID = db.Column(db.Integer,db.ForeignKey(Users.userID), nullable=False)
+    postD = db.Column(db.Integer,db.ForeignKey(Posts.postID), nullable=False)
     commentTxt = db.Column(db.String, nullable=False)
 
 
@@ -32,22 +39,47 @@ class Comments(db.Model):
 def index():
     return render_template('index.html')
 
+@app.route('/portfolio')
+def portfolio():
+    return render_template('portfolio.html')
+
+@app.route('/createUser', methods=['GET','POST'])
+def createUser():
+    if request.method == 'POST':
+        newUser = Users(username=request.form['username'])
+        db.session.add(newUser)
+        db.session.commit()
+        return redirect(url_for('createUser'))
+    return render_template('createUser.html')
+
 @app.route('/posts', methods=['GET','POST'])
 def posts():
     posts = Posts.query.all()
+    users = Users.query.all()
     if request.method == 'POST':
         newPost = Posts(
-            poster=request.form['name'],
+            userID=request.form['poster'],
             postTxt=request.form['postText']
         )
         db.session.add(newPost)
-        db.session.commit()
+        db.session.commit() 
         return redirect(url_for('posts'))
-    return render_template('posts.html',posts=posts)
+    return render_template('posts.html',posts=posts,users=users)
 
 @app.route('/posts/comment',methods=['GET','POST'])
 def comment():
-    pass
+    comments=Comments.query.all()
+    posts=Posts.query.all()
+    users=Users.query.all()
+    if request.method == 'POST':
+        newComment = Comments(
+            userID=request.form['commentName'],
+            commentTxt=request.form['commentText']
+        )
+        db.session.add(newComment)
+        db.session.commit()
+        return redirect(url_for('posts'))
+    return render_template('posts.html',comments=comments,posts=posts,users=users)
     
 with app.app_context():
     db.create_all()

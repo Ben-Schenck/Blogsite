@@ -1,8 +1,13 @@
 {% extends "base.html" %}
 {% block content %}
+<!--Make Post-->
 <h1>Make a Post</h1>
 <form method="POST" id="makePost">
-    <label>Your Name:</label><input type="text" name="name"><br>
+    <select name="poster">
+      <option value="">User</option>
+      {%for username in users%}
+      <option value="{{username.userID}}">{{username.username}}</option>
+      {%endfor%}</select>
     <label>Post:</label><input type="text" name="postText"><br>
     <button type="submit">Post</button>
 </form>
@@ -10,32 +15,22 @@
 <h1>Recent Activity</h1>
 {%for i in posts%}
 <p>{{i.poster}} says: {{i.postTxt}}</p>
+<!--Make Comment-->
 <form method="POST" id="makeComment">
-    <button type="button" class="collapsible">Make a Comment</button>
-    <div class="content">
-        <label>Your Name:</label><input type="text" name="commentName"><br>
-        <label>Comment:</label><input type="text" name="commentText"><br>
-        <button type="submit">Post</button>
+    <p>Make a Comment</p>
+    <div>
+      <select name="poster">
+        <option value="">User</option>
+        {%for username in users%}
+        <option value="{{username.userID}}">{{username.username}}</option>
+        {%endfor%}</select>
+      <label>Comment:</label><input type="text" name="commentText"><br>
+      <button type="submit">Post</button>
     </div>
-    <script>
-var coll = document.getElementsByClassName("collapsible");
-var i;
-
-for (i = 0; i < coll.length; i++) {
-  coll[i].addEventListener("click", function() {
-    this.classList.toggle("active");
-    var content = this.nextElementSibling;
-    if (content.style.display === "block") {
-      content.style.display = "none";
-    } else {
-      content.style.display = "block";
-    }
-  });
-}
-</script>
 </form>
-
 <h4>Comments:</h4><hr>
-
+{%for c in comments%}
+<ul>{{c.commentPoster}} says: {{c.commentText}}</ul>
+{%endfor%}
 {%endfor%}
 {% endblock %}  
