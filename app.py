@@ -49,6 +49,7 @@ def createUser():
         newUser = Users(username=request.form['username'])
         db.session.add(newUser)
         db.session.commit()
+        flash('User added')
         return redirect(url_for('createUser'))
     return render_template('createUser.html')
 
@@ -56,6 +57,7 @@ def createUser():
 def posts():
     posts = Posts.query.all()
     users = Users.query.all()
+    comments = Comments.query.all()
     if request.method == 'POST':
         newPost = Posts(
             userID=request.form['poster'],
@@ -64,7 +66,19 @@ def posts():
         db.session.add(newPost)
         db.session.commit() 
         return redirect(url_for('posts'))
-    return render_template('posts.html',posts=posts,users=users)
+    return render_template('posts.html',posts=posts,users=users,comments=comments)
+
+@app.route('/posts/edit', methods=['GET','POST'])
+def postEdit():
+    pass
+
+@app.route('/posts/delete/<int:id>', methods=['GET','POST'])
+def postDelete(id):
+    post = Posts.query.get(id)
+    db.session.delete(post)
+    db.session.commit()
+    flash('Post Removed')
+    return redirect(url_for('posts'))
 
 @app.route('/posts/comment',methods=['GET','POST'])
 def comment():
@@ -73,13 +87,27 @@ def comment():
     users=Users.query.all()
     if request.method == 'POST':
         newComment = Comments(
-            userID=request.form['commentName'],
+            userID=request.form['poster'],
+            postID = request.form.get[''],
             commentTxt=request.form['commentText']
         )
         db.session.add(newComment)
         db.session.commit()
         return redirect(url_for('posts'))
     return render_template('posts.html',comments=comments,posts=posts,users=users)
+
+@app.route('/posts/comment/edit', methods=['GET','POST'])
+def commentEdit():
+    pass
+
+@app.route('/posts/comment/delete<int:id>', methods=['GET','POST'])
+def commentDelete(id):
+    comment = Comments.query.get(id)
+    db.session.delete(comment)
+    db.session.commit()
+    flash('comment Removed')
+    return redirect(url_for('posts'))
+
     
 with app.app_context():
     db.create_all()

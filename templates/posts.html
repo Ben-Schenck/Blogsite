@@ -11,10 +11,11 @@
     <label>Post:</label><input type="text" name="postText"><br>
     <button type="submit">Post</button>
 </form>
-
 <h1>Recent Activity</h1>
 {%for i in posts%}
 <p>{{i.poster}} says: {{i.postTxt}}</p>
+<a href="{{url_for('postEdit', id=i.postID)}}">Edit Post</a>
+<a href="{{url_for('postDelete', id=i.postID)}}">Delete Post</a>
 <!--Make Comment-->
 <form method="POST" id="makeComment">
     <p>Make a Comment</p>
@@ -30,7 +31,7 @@
 </form>
 <h4>Comments:</h4><hr>
 {%for c in comments%}
-<ul>{{c.commentPoster}} says: {{c.commentText}}</ul>
+<ul>{{c.userID}} says: {{c.commentText}}</ul>
 {%endfor%}
 {%endfor%}
 {% endblock %}  
