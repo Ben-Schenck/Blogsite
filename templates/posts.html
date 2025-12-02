@@ -17,7 +17,7 @@
 <a href="{{url_for('postEdit', id=i.postID)}}">Edit Post</a>
 <a href="{{url_for('postDelete', id=i.postID)}}">Delete Post</a>
 <!--Make Comment-->
-<form method="POST" id="makeComment">
+<form method="POST" action ="{{url_for('comment')}}" id="makeComment">
     <p>Make a Comment</p>
     <div>
       <select name="poster">
@@ -27,6 +27,7 @@
         {%endfor%}</select>
       <label>Comment:</label><input type="text" name="commentText"><br>
       <button type="submit">Post</button>
+      <input type="hidden" name ="postID" id = "commentID" value = "{{i.postID}}">
     </div>
 </form>
 <h4>Comments:</h4><hr>

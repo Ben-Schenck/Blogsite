@@ -25,12 +25,12 @@ class Posts(db.Model):
     postID = db.Column(db.Integer, primary_key=True)
     userID = db.Column(db.Integer,db.ForeignKey(Users.userID), nullable=False)
     postTxt = db.Column(db.String(80), nullable=False)
-    comments = db.relationship('Comments', backref='post', lazy=True)
+    comments = db.relationship('Comments', backref='post', cascade='delete', lazy=True)
 
 class Comments(db.Model):
     commentID = db.Column(db.Integer, primary_key=True)
     userID = db.Column(db.Integer,db.ForeignKey(Users.userID), nullable=False)
-    postD = db.Column(db.Integer,db.ForeignKey(Posts.postID), nullable=False)
+    postID = db.Column(db.Integer,db.ForeignKey(Posts.postID), nullable=False)
     commentTxt = db.Column(db.String, nullable=False)
 
 
@@ -53,6 +53,7 @@ def createUser():
         return redirect(url_for('createUser'))
     return render_template('createUser.html')
 
+#POSTS
 @app.route('/posts', methods=['GET','POST'])
 def posts():
     posts = Posts.query.all()
@@ -80,6 +81,7 @@ def postDelete(id):
     flash('Post Removed')
     return redirect(url_for('posts'))
 
+#COMMENTS
 @app.route('/posts/comment',methods=['GET','POST'])
 def comment():
     comments=Comments.query.all()
@@ -88,7 +90,7 @@ def comment():
     if request.method == 'POST':
         newComment = Comments(
             userID=request.form['poster'],
-            postID = request.form.get[''],
+            postID =request.form.get('postID'),
             commentTxt=request.form['commentText']
         )
         db.session.add(newComment)
