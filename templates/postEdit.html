@@ -1,7 +1,9 @@
 {% extends "base.html" %}
 {% block content %}
 <h1>Edit Post</h1>
-<form method="POST" id="editPost">
-    <label>Post</label><input type="text" name="editedPost"><br>
-    <button type="submit">Create</button>
+<form action="{{url_for('postEdit')}}" method="POST">
+    <input type="hidden" name="postID" id="postID" value="{{posts.postID}}" />
+    <label>Post:</label><input type="text" name="newPostText"><br>
+    <button type="submit">Post</button>
+</form> 
 {% endblock %}  

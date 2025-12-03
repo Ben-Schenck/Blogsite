@@ -1,4 +1,4 @@
-from flask import Flask, flash, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
 import os
@@ -49,9 +49,9 @@ def createUser():
         newUser = Users(username=request.form['username'])
         db.session.add(newUser)
         db.session.commit()
-        flash('User added')
         return redirect(url_for('createUser'))
     return render_template('createUser.html')
+
 
 #POSTS
 @app.route('/posts', methods=['GET','POST'])
@@ -60,6 +60,8 @@ def posts():
     users = Users.query.all()
     comments = Comments.query.all()
     if request.method == 'POST':
+        #findPoster = db.session.query(Users).filter(Users.userID == request.form['poster']).first()
+        #postUsername = findPoster.username
         newPost = Posts(
             userID=request.form['poster'],
             postTxt=request.form['postText']
@@ -71,15 +73,21 @@ def posts():
 
 @app.route('/posts/edit', methods=['GET','POST'])
 def postEdit():
-    pass
+    if request.method =="POST":
+        postID = request.form.get('postID','')
+        postToUpdate = Posts.query.filter_by(id=postID).first()
+        postToUpdate.postTxt = request.form.get('newPostText',postToUpdate.postTxt)
+        db.session.commit()
+        return redirect(url_for('posts'))
+    return render_template('postEdit.html',posts=postToUpdate)
 
 @app.route('/posts/delete/<int:id>', methods=['GET','POST'])
 def postDelete(id):
     post = Posts.query.get(id)
     db.session.delete(post)
     db.session.commit()
-    flash('Post Removed')
     return redirect(url_for('posts'))
+
 
 #COMMENTS
 @app.route('/posts/comment',methods=['GET','POST'])
@@ -89,8 +97,8 @@ def comment():
     users=Users.query.all()
     if request.method == 'POST':
         newComment = Comments(
-            userID=request.form['poster'],
             postID =request.form.get('postID'),
+            userID = request.form['commentPoster'],
             commentTxt=request.form['commentText']
         )
         db.session.add(newComment)
@@ -107,7 +115,6 @@ def commentDelete(id):
     comment = Comments.query.get(id)
     db.session.delete(comment)
     db.session.commit()
-    flash('comment Removed')
     return redirect(url_for('posts'))
 
     

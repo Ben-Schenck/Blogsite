@@ -11,16 +11,20 @@
     <label>Post:</label><input type="text" name="postText"><br>
     <button type="submit">Post</button>
 </form>
+
+
 <h1>Recent Activity</h1>
 {%for i in posts%}
-<p>{{i.poster}} says: {{i.postTxt}}</p>
+<p>{{i.username}} says: {{i.postTxt}}</p>
 <a href="{{url_for('postEdit', id=i.postID)}}">Edit Post</a>
 <a href="{{url_for('postDelete', id=i.postID)}}">Delete Post</a>
+
+
 <!--Make Comment-->
 <form method="POST" action ="{{url_for('comment')}}" id="makeComment">
     <p>Make a Comment</p>
     <div>
-      <select name="poster">
+      <select name="commentPoster">
         <option value="">User</option>
         {%for username in users%}
         <option value="{{username.userID}}">{{username.username}}</option>
@@ -30,9 +34,13 @@
       <input type="hidden" name ="postID" id = "commentID" value = "{{i.postID}}">
     </div>
 </form>
+
 <h4>Comments:</h4><hr>
-{%for c in comments%}
-<ul>{{c.userID}} says: {{c.commentText}}</ul>
+{%for c in comments%} 
+<ul>{{c.userID }} says: {{c.commentTxt}}</ul>
+<a href="{{url_for('commentEdit', id=c.commentID)}}">Edit Comment</a>
+<a href="{{url_for('commentDelete', id=c.commentID)}}">Delete Comment</a>
 {%endfor%}
+{%else%}
 {%endfor%}
 {% endblock %}  
