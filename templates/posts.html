@@ -15,7 +15,7 @@
 
 <h1>Recent Activity</h1>
 {%for i in posts%}
-<p>{{i.username}} says: {{i.postTxt}}</p>
+<p>{{i.postUsername}} says: {{i.postTxt}}</p>
 <a href="{{url_for('postEdit', id=i.postID)}}">Edit Post</a>
 <a href="{{url_for('postDelete', id=i.postID)}}">Delete Post</a>
 
@@ -37,7 +37,7 @@
 
 <h4>Comments:</h4><hr>
 {%for c in comments%} 
-<ul>{{c.userID }} says: {{c.commentTxt}}</ul>
+<ul>{{c.commentPoster }} says: {{c.commentTxt}}</ul>
 <a href="{{url_for('commentEdit', id=c.commentID)}}">Edit Comment</a>
 <a href="{{url_for('commentDelete', id=c.commentID)}}">Delete Comment</a>
 {%endfor%}
