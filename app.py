@@ -30,7 +30,6 @@ class Posts(db.Model):
 
 class Comments(db.Model):
     commentID = db.Column(db.Integer, primary_key=True)
-    commentPoster = db.Column(db.String(80),nullable = False)
     userID = db.Column(db.Integer,db.ForeignKey(Users.userID), nullable=False)
     postID = db.Column(db.Integer,db.ForeignKey(Posts.postID), nullable=False)
     commentTxt = db.Column(db.String, nullable=False)
@@ -74,15 +73,14 @@ def posts():
         return redirect(url_for('posts'))
     return render_template('posts.html',posts=posts,users=users,comments=comments)
 
-@app.route('/posts/edit', methods=['GET','POST'])
-def postEdit():
+@app.route('/posts/edit/<int:id>', methods=['GET','POST'])
+def postEdit(id):
+    postEdit=Posts.query.get(id)
     if request.method =="POST":
-        postID = request.form.get('postID','')
-        postToUpdate = Posts.query.filter_by(id=postID).first()
-        postToUpdate.postTxt = request.form.get('newPostText',postToUpdate.postTxt)
+        postEdit.postTxt = request.form.get('postEdit')
         db.session.commit()
         return redirect(url_for('posts'))
-    return render_template('postEdit.html',posts=postToUpdate)
+    return render_template('postEdit.html',posts=postEdit)
 
 @app.route('/posts/delete/<int:id>', methods=['GET','POST'])
 def postDelete(id):
@@ -102,10 +100,9 @@ def comment():
         findcomPoster = db.session.query(Users).filter(Users.userID == request.form['commentPoster']).first()
         ComUsername = findcomPoster.username
         newComment = Comments(
-            postID =request.form.get('postID'),
+            postID = request.form.get('postID'),
             userID = request.form['commentPoster'],
-            commentPoster = ComUsername,
-            commentTxt=request.form['commentText']
+            commentTxt= request.form['commentText']
         )
         db.session.add(newComment)
         db.session.commit()

@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
+
 <!--Make Post-->
 <h1>Make a Post</h1>
 <form method="POST" id="makePost">
@@ -34,13 +35,15 @@
       <input type="hidden" name ="postID" id = "commentID" value = "{{i.postID}}">
     </div>
 </form>
-
-<h4>Comments:</h4><hr>
-{%for c in comments%} 
-<ul>{{c.commentPoster }} says: {{c.commentTxt}}</ul>
-<a href="{{url_for('commentEdit', id=c.commentID)}}">Edit Comment</a>
-<a href="{{url_for('commentDelete', id=c.commentID)}}">Delete Comment</a>
-{%endfor%}
-{%else%}
-{%endfor%}
-{% endblock %}  
+{%if i.comments%}
+  <h4>Comments:</h4><hr> 
+  {%for comment in i.comments%}
+    <p>{{ComUsername}} says: {{comment.commentTxt}}</p>
+    <a href="{{url_for('commentEdit', id=comment.commentID)}}">Edit Comment</a>
+    <a href="{{url_for('commentDelete', id=comment.commentID)}}">Delete Comment</a><hr>
+    {%endfor%}  
+  {%else%}
+    <p>No comments yet</p>
+  {%endif%}
+  {%endfor%}
+{% endblock %}
