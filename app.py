@@ -78,7 +78,7 @@ def postEdit(id):
     postEdit=Posts.query.get(id)
     if request.method =="POST":
         postEdit.postTxt = request.form.get('postEdit')
-        db.session.commit()
+        db.session.commit()     
         return redirect(url_for('posts'))
     return render_template('postEdit.html',posts=postEdit)
 
@@ -109,9 +109,14 @@ def comment():
         return redirect(url_for('posts'))
     return render_template('posts.html',comments=comments,posts=posts,users=users)
 
-@app.route('/posts/comment/edit', methods=['GET','POST'])
-def commentEdit():
-    pass
+@app.route('/posts/comment/edit/<int:id>', methods=['GET','POST'])
+def commentEdit(id):
+    commentEdit=Comments.query.get(id)
+    if request.method =="POST":
+        commentEdit.commentTxt = request.form.get('commentEdit')
+        db.session.commit()
+        return redirect(url_for('posts'))
+    return render_template('commentEdit.html',comments=commentEdit)
 
 @app.route('/posts/comment/delete<int:id>', methods=['GET','POST'])
 def commentDelete(id):

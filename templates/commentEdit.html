@@ -1,7 +1,12 @@
 {% extends "base.html" %}
 {% block content %}
 <h1>Edit Comment</h1>
-<form method="POST" id="editComment">
-    <label>Comment</label><input type="text" name="editedComment"><br>
-    <button type="submit">Create</button>
+<form action="{{url_for('commentEdit', id=comments.commentID)}}"method="POST">
+    <input type="hidden" name="commentID" id="commentID" value="{{comments.commentID}}">
+    <div>
+        <label for="Comment">Comment:</label>
+        <input type="text" name="commentEdit" id="commentEdit" value="{{comments.commentTxt}}" required><br>
+    </div>
+    <button type="submit">Edit</button>
+</form>
 {% endblock %}  
