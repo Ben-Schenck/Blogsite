@@ -23,7 +23,6 @@ class Users(db.Model):
 
 class Posts(db.Model):
     postID = db.Column(db.Integer, primary_key=True)
-    postUsername = db.Column(db.String(80), nullable=False)
     userID = db.Column(db.Integer,db.ForeignKey(Users.userID), nullable=False)
     postTxt = db.Column(db.String(80), nullable=False)
     comments = db.relationship('Comments', backref='post', cascade='delete', lazy=True)
@@ -61,11 +60,8 @@ def posts():
     users = Users.query.all()
     comments = Comments.query.all()
     if request.method == 'POST':
-        findPoster = db.session.query(Users).filter(Users.userID == request.form['poster']).first()
-        postUsername = findPoster.username
         newPost = Posts(
             userID=request.form['poster'],
-            postUsername =postUsername,
             postTxt=request.form['postText']
         )
         db.session.add(newPost)
@@ -97,8 +93,6 @@ def comment():
     posts=Posts.query.all()
     users=Users.query.all()
     if request.method == 'POST':
-        findcomPoster = db.session.query(Users).filter(Users.userID == request.form['commentPoster']).first()
-        ComUsername = findcomPoster.username
         newComment = Comments(
             postID = request.form.get('postID'),
             userID = request.form['commentPoster'],
